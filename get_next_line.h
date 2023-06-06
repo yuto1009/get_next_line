@@ -6,7 +6,7 @@
 /*   By: yutoendo <yutoendo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:41:48 by yuendo            #+#    #+#             */
-/*   Updated: 2023/06/02 12:16:27 by yutoendo         ###   ########.fr       */
+/*   Updated: 2023/06/06 12:44:44 by yutoendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <limits.h>
 
 #ifndef BUFFER_SIZE
-#define BUFFER_SIZE SIZE_MAX
+#define BUFFER_SIZE 42
 #endif
 
 char *get_next_line(int fd);
