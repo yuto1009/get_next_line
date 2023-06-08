@@ -6,7 +6,7 @@
 /*   By: yutoendo <yutoendo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:41:05 by yuendo            #+#    #+#             */
-/*   Updated: 2023/06/06 22:19:20 by yutoendo         ###   ########.fr       */
+/*   Updated: 2023/06/08 20:16:59 by yutoendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,42 +25,71 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strrchr(const char *s, int c)
+void	ft_bzero(void *s, size_t n)
+{
+	unsigned char	*p;
+
+	p = (unsigned char *)s;
+	while (n--)
+		*p++ = 0;
+}
+
+void	*ft_calloc(size_t count, size_t size)
+{
+	void	*p;
+
+	if (size && count > SIZE_MAX / size)
+		return (NULL);
+	p = (void *)malloc(count * size);
+	if (!p)
+		return (NULL);
+	ft_bzero(p, count * size);
+	return (p);
+}
+
+char	*ft_strchr(const char *s, int c)
 {
 	char	*str;
-	size_t	ssize;
 
+    if(!s)
+        return(NULL);
 	str = (char *)s;
-	ssize = ft_strlen(str);
-	if (str[ssize] == (char)c)
-		return (&str[ssize]);
-	while (ssize--)
+	while (*str != '\0')
 	{
-		if (str[ssize] == (char)c)
-			return (&str[ssize]);
+		if (*str == (char)c)
+			return (str);
+		str++;
 	}
+	if (*str == (char)c)
+		return (str);
 	return (NULL);
 }
 
-char	*my_strjoin(char *s1, char *s2)
+char	*my_strjoin(char *loaded, char *buffer)
 {
 	char	*str;
 	char	*str_start;
+    char *loaded_start;
 
-	str = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1)*sizeof(char));
+    if(!loaded)
+        loaded = (char *)ft_calloc(1, sizeof(char));
+    if(!loaded || !buffer)
+        return NULL;
+	str = (char *)malloc((ft_strlen(loaded) + ft_strlen(buffer) + 1)*sizeof(char));
 	if (!str)
 		return (NULL);
 	str_start = str;
-	while (*s1)
-		*str++ = *s1++;
-    free(s1);
-	while (*s2)
-		*str++ = *s2++;
+    loaded_start = loaded;
+	while (*loaded)
+		*str++ = *loaded++;
+	while (*buffer)
+		*str++ = *buffer++;
 	*str = 0;
+    free(loaded_start);
 	return (str_start);
 }
 
-static char *load_buffer(int fd, char *loaded){
+char *load_buffer(int fd, char *loaded){
     char *buffer;
     ssize_t loaded_bytes;
 
@@ -68,7 +97,7 @@ static char *load_buffer(int fd, char *loaded){
     if(!buffer)
         return NULL;
     loaded_bytes = 1;
-    while(!ft_strrchr(loaded, '\n') && loaded_bytes != 0){
+    while(!ft_strchr(loaded, '\n') && loaded_bytes != 0){
         loaded_bytes = read(fd, buffer, BUFFER_SIZE);
         if(loaded_bytes == -1){
             free(buffer);
@@ -86,6 +115,8 @@ char *get_return_line(char *loaded){
     char *return_line;
     
     i = 0;
+    if(!*loaded)
+        return NULL;
     while(loaded[i] && loaded[i] != '\n')
         i++;
     if(loaded[i] && loaded[i] == '\n')
@@ -109,39 +140,37 @@ char *get_return_line(char *loaded){
 char *get_next_load(char *loaded){
     char *next_load;
     size_t i;
-    size_t next_load_bytes;
+    size_t j;
 
     i = 0;
     while(loaded[i] && loaded[i] != '\n')
         i++;
-    if(loaded[i] && loaded[i] == '\n')
-        i++;
-    next_load_bytes = 0;
-    while(loaded[i]){
-        i++;
-        next_load_bytes++;
+    if (!loaded[i]){
+        free(loaded);
+        return(NULL);
     }
-    next_load = (char *)malloc((next_load_bytes+1)*sizeof(char));
+    next_load = (char *)malloc((ft_strlen(loaded) - i + 1)*sizeof(char));
     if(!next_load)
         return NULL;
-    i = i - next_load_bytes;
-    while(i < next_load_bytes)
-        *next_load++ = loaded[i++];
+    i++;
+    j = 0;
+    while(loaded[i])
+        next_load[j++] = loaded[i++];
+    next_load[j] = '\0';
+    free(loaded);
     return next_load;
 }
 
 char *get_next_line(int fd){
-    static char *loaded = "\0";
-    static int last_fd = -1;
+    static char *loaded;
     char *return_line;
     
     if (fd < 0 || BUFFER_SIZE <= 0)
         return NULL;
-    if (last_fd != fd)
-        *loaded = '\0';
     loaded = load_buffer(fd, loaded);
+    if(!loaded)
+        return(NULL);
     return_line = get_return_line(loaded);
-    // save what's left of loaded for next call
     loaded = get_next_load(loaded);
     return return_line;
 }
@@ -152,11 +181,10 @@ char *get_next_line(int fd){
 //     int        fd;
 //     char    *line;
 
-//     fd = open("./sample", O_RDONLY);
+//     fd = open("./sample2", O_RDONLY);
 //     while (1)
 //     {
 //         line = get_next_line(fd);
-//         close (fd);
 //         if (line == NULL){
 //             printf("LINE is NULL\n");
 //             return 0;
@@ -164,6 +192,6 @@ char *get_next_line(int fd){
 //         printf("%s", line);
 //         free(line);
 //     }
-//     // system("leaks a.out");
+//     line = get_next_line(fd);
 //     return (0);
 // }
