@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yutoendo <yutoendo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yuendo <yuendo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:41:48 by yuendo            #+#    #+#             */
-/*   Updated: 2023/06/10 11:00:25 by yutoendo         ###   ########.fr       */
+/*   Updated: 2023/06/10 13:16:29 by yuendo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 
 char	*get_next_line(int fd);
 size_t	ft_strlen(const char *s);
+void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t count, size_t size);
 char	*my_strchr(const char *s, int c);
 char	*my_strjoin(char *loaded, char *buffer);
