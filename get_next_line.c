@@ -6,7 +6,7 @@
 /*   By: yuendo <yuendo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:41:05 by yuendo            #+#    #+#             */
-/*   Updated: 2023/06/10 18:14:32 by yuendo           ###   ########.fr       */
+/*   Updated: 2023/06/13 19:29:46 by yuendo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ char	*load_buffer(int fd, char *loaded)
 		if (loaded_bytes == -1)
 		{
 			free(buffer);
+			free(loaded);
 			return (NULL);
 		}
 		buffer[loaded_bytes] = '\0';
@@ -42,11 +43,14 @@ char	*get_return_line(char *loaded)
 	char	*return_line;
 
 	i = 0;
-	if (!*loaded)
+	if (!(*loaded))
 		return (NULL);
-	while (loaded[i] && loaded[i] != '\n')
+	while (loaded[i] != '\0' && loaded[i] != '\n')
 		i++;
-	return_line = (char *)malloc((i + 2) * sizeof(char));
+		
+	if(loaded[i] && loaded[i] == '\n')
+		i++;
+	return_line = (char *)malloc((i + 1) * sizeof(char));
 	if (!return_line)
 		return (NULL);
 	i = 0;
