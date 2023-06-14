@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuendo <yuendo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yutoendo <yutoendo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:41:05 by yuendo            #+#    #+#             */
-/*   Updated: 2023/06/13 19:29:46 by yuendo           ###   ########.fr       */
+/*   Updated: 2023/06/14 21:12:03 by yutoendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,7 @@ char	*get_return_line(char *loaded)
 		return (NULL);
 	while (loaded[i] != '\0' && loaded[i] != '\n')
 		i++;
-		
-	if(loaded[i] && loaded[i] == '\n')
+	if (loaded[i] == '\n')
 		i++;
 	return_line = (char *)malloc((i + 1) * sizeof(char));
 	if (!return_line)
@@ -82,12 +81,13 @@ char	*get_next_load(char *loaded)
 		free(loaded);
 		return (NULL);
 	}
+	i++;
 	next_load = (char *)malloc((ft_strlen(loaded) - i + 1) * sizeof(char));
-	if (!next_load){
+	if (!next_load)
+	{
 		free(loaded);
 		return (NULL);
 	}
-	i++;
 	j = 0;
 	while (loaded[i])
 		next_load[j++] = loaded[i++];
@@ -134,7 +134,7 @@ char	*get_next_line(int fd)
 //         printf("%s", line);
 //         free(line);
 //     }
-	
+
 // 	fd = open("./sample2", O_RDONLY);
 //     while (1)
 //     {
