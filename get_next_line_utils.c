@@ -76,7 +76,8 @@ char	*my_strjoin(char *loaded, char *buffer)
 		return (NULL);
 	str = (char *)malloc((ft_strlen(loaded) + ft_strlen(buffer) + 1)
 			* sizeof(char));
-	if (!str){
+	if (!str)
+	{
 		free(loaded);
 		return (NULL);
 	}

@@ -6,7 +6,7 @@
 /*   By: yutoendo <yutoendo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:41:05 by yuendo            #+#    #+#             */
-/*   Updated: 2023/06/14 21:12:03 by yutoendo         ###   ########.fr       */
+/*   Updated: 2023/06/21 21:23:02 by yutoendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,25 @@ char	*load_buffer(int fd, char *loaded)
 	return (loaded);
 }
 
+char	*get_return_line_utils(char *loaded, char *return_line)
+{
+	size_t	i;
+
+	i = 0;
+	while (loaded[i] && loaded[i] != '\n')
+	{
+		return_line[i] = loaded[i];
+		i++;
+	}
+	if (loaded[i] && loaded[i] == '\n')
+	{
+		return_line[i] = loaded[i];
+		i++;
+	}
+	return_line[i] = '\0';
+	return (return_line);
+}
+
 char	*get_return_line(char *loaded)
 {
 	size_t	i;
@@ -52,19 +71,7 @@ char	*get_return_line(char *loaded)
 	return_line = (char *)malloc((i + 1) * sizeof(char));
 	if (!return_line)
 		return (NULL);
-	i = 0;
-	while (loaded[i] && loaded[i] != '\n')
-	{
-		return_line[i] = loaded[i];
-		i++;
-	}
-	if (loaded[i] && loaded[i] == '\n')
-	{
-		return_line[i] = loaded[i];
-		i++;
-	}
-	return_line[i] = '\0';
-	return (return_line);
+	return (get_return_line_utils(loaded, return_line));
 }
 
 char	*get_next_load(char *loaded)
